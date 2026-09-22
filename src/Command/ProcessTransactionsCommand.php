@@ -42,7 +42,7 @@ final class ProcessTransactionsCommand extends Command
             if (TransactionStatus::COMPLETED === $transaction->getStatus()) {
                 $io->success(sprintf('Transaction #%d completed.', $transaction->getId()));
             } else {
-                $io->warning(sprintf('Transaction #%d rejected (wallet not found).', $transaction->getId()));
+                $io->warning(sprintf('Transaction #%d rejected.', $transaction->getId()));
             }
         }
 

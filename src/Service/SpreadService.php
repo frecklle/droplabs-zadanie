@@ -32,6 +32,7 @@ class SpreadService
         $fromLiquidity = self::LIQUIDITY_SCORE[$fromCurrency->value];
         $toLiquidity = self::LIQUIDITY_SCORE[$toCurrency->value];
 
+        //avg pair liquidity calculation
         $pairLiquidity = ($fromLiquidity + $toLiquidity) / 2;
 
         $spreadPercent = self::BASE_SPREAD_PERCENT / $pairLiquidity;

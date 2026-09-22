@@ -15,4 +15,5 @@ interface CompanyWalletRepositoryInterface
     public function findAll(): array;
 
     public function addToBalance(Currency $currency, string $amount): void;
+
 }

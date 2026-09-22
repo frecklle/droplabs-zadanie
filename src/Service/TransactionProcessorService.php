@@ -8,6 +8,7 @@ use App\Entity\Transaction;
 use App\Enum\TransactionStatus;
 use App\Repository\TransactionRepositoryInterface;
 use App\Repository\WalletRepositoryInterface;
+use App\Repository\CompanyWalletRepositoryInterface;
 use DateTimeImmutable;
 
 final readonly class TransactionProcessorService
@@ -15,6 +16,7 @@ final readonly class TransactionProcessorService
     public function __construct(
         private WalletRepositoryInterface $walletRepository,
         private TransactionRepositoryInterface $transactionRepository,
+        private CompanyWalletRepositoryInterface $companyWalletRepository
     ) {
     }
 
@@ -29,6 +31,12 @@ final readonly class TransactionProcessorService
             return;
         }
 
+        if ($fromWallet->getBalance() < (float) $transaction->getFromAmount()) {
+            $this->reject($transaction);
+
+            return;
+        }
+        
         $fromWallet->setBalance($fromWallet->getBalance() - (float) $transaction->getFromAmount());
         $fromWallet->setLastActivityAt(new DateTimeImmutable());
 
@@ -45,6 +53,10 @@ final readonly class TransactionProcessorService
         }
 
         $this->transactionRepository->save($transaction);
+
+        $spreadCurrency = $transaction->getFromCurrency();
+        $spreadAmount = $transaction->getSpread();
+        $this->companyWalletRepository->addToBalance($spreadCurrency, $spreadAmount);
     }
 
     public function reject(Transaction $transaction): void

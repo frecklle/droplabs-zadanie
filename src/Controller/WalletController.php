@@ -136,4 +136,20 @@ final class WalletController extends AbstractController
 
         return new JsonResponse(new WalletResponse($wallet));
     }
+    /**
+     * @throws JsonException
+     */
+
+    #[Route('/{id}/delete', methods: ['POST'])]
+    public function deleteWallet(int $id, #[CurrentUser] User $user): JsonResponse
+    {
+    try {
+        $this->walletService->deleteWallet($user->getIdNotNull(), $id);
+    } catch (WalletNotFoundException $e) {
+        return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+    } catch (\Exception $e) {
+        return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+    }
+    return new JsonResponse(['message' => 'Wallet deleted successfully.']);
+    }
 }

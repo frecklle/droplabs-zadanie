@@ -45,8 +45,13 @@ readonly class TransferService
 
         $toAmountFormatted = number_format($toAmount, 4, '.', '');
 
-        $fromWallet->setBalance($fromWallet->getBalance() - (float) $fromAmount);
-        $toWallet->setBalance($toWallet->getBalance() + (float) $toAmountFormatted);
+        //check if user has enough money before processing transfer
+        if($fromWallet->getBalance() < (float) $fromAmount) {
+            throw new \Exception("You don't have enough money in your wallet");
+        }
+
+        //$fromWallet->setBalance($fromWallet->getBalance() - (float) $fromAmount);
+        //$toWallet->setBalance($toWallet->getBalance() + (float) $toAmountFormatted);
 
         $this->walletRepository->save($fromWallet);
         $this->walletRepository->save($toWallet);
