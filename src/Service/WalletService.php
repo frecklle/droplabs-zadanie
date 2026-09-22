@@ -9,11 +9,13 @@ use App\Enum\Currency;
 use App\Exception\WalletAlreadyExistsException;
 use App\Repository\WalletRepositoryInterface;
 use App\Exception\WalletNotFoundException;
+use App\Repository\TransactionRepositoryInterface;
 
 readonly class WalletService
 {
     public function __construct(
         private WalletRepositoryInterface $walletRepository,
+        private TransactionRepositoryInterface $transactionRepository,
     ) {
     }
 
@@ -45,6 +47,10 @@ readonly class WalletService
 
         if($wallet->getBalance() > 0) {
             throw new \Exception('Wallet has positive balance. Transfer balance to a different wallet to delete.');
+        }
+
+        if (!empty($this->transactionRepository->findByWalletId($walletId))) {
+            throw new \Exception('Cannot delete wallet with transaction history.');
         }
 
         $this->walletRepository->delete($wallet);
