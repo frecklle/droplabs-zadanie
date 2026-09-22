@@ -53,8 +53,8 @@ readonly class TransferService
         //$fromWallet->setBalance($fromWallet->getBalance() - (float) $fromAmount);
         //$toWallet->setBalance($toWallet->getBalance() + (float) $toAmountFormatted);
 
-        $this->walletRepository->save($fromWallet);
-        $this->walletRepository->save($toWallet);
+        //$this->walletRepository->save($fromWallet);
+        //$this->walletRepository->save($toWallet);
 
         $transaction = Transaction::create(
             fromWalletId: $fromWalletId,

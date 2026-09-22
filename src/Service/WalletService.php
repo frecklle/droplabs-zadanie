@@ -43,7 +43,7 @@ readonly class WalletService
             throw new \Exception('No user found.');
         }
 
-        if($wallet->getBalance() > 0 ) {
+        if($wallet->getBalance() > 0) {
             throw new \Exception('Wallet has positive balance. Transfer balance to a different wallet to delete.');
         }
 
